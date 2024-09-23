@@ -1,0 +1,59 @@
+Install/Setup CPW
+==========================
+
+1 - Place CPW-Install.tar.gz in /var/www or /var/www/html depending on apache distro
+untar by running following command
+cd /var/www && tar -zxvf CPW-Install.tar.gz
+or
+cd /var/www/html && tar -zxvf CPW-Install.tar.gz
+
+2 - Import database into mysql, this install.sql will drop and create new database called cpw
+mysql -uroot -proot < /var/www/CPW/config/install.sql
+or
+mysql -uroot -proot < /var/www/html/CPW/config/install.sql
+
+3 - Server side via putty navigate to CPW dir and run 
+./cpw install
+answer the prompts of mysql ip, username, password, and database cpw
+
+4 - (launcher Verify option) copy element dir from client to ./CPW/files/new/
+*.pck archives have to be extracted
+*** do not put .pck files in ./new dir ***
+example: models.pck = ./new/element/models/
+
+5 - Server side via putty navigate to CPW dir and run 
+./cpw initial
+
+6 - Choose your skin per client version by renaming the ./patcher/skin folder and the ./launcher/launcher.png
+delete the skins you don't want
+
+7 - Client side open ./patcher/skin/mainuni.xml via text editor
+search the word "UpdateBrowser"
+modify the InitURL="http://xxx.xxx/CPW/pw_news.html
+replacing the xxx.xxx with your url or ip
+
+8 - Client side modify ./patcher/server/updateserver.txt to your update url
+example: "[EN]Patch-1"		"http://10.0.0.111/CPW/files/CPW/"
+
+9 - Patch client side patcher.exe so that it will have needed key to communicate with specific CPW
+copy client side ./patcher/patcher.exe to server side ./CPW/patcher.exe
+via putty on server run while in the ./CPW dir
+./cpw x patcher.exe
+copy the new patcher.exe back to client overwriting/replacing the old one
+
+Apply update/patch
+=======================
+place new/modified files in ./CPW/files/new/
+
+pck related files go into dirs named accordingly to the name of the pck
+using the same dir/file structure within the pck
+
+when done run following command
+./cpw revision
+or
+./cpw new
+
+Troubleshoot
+=====================
+command: fix language or garbage text
+dpkg-reconfigure locales

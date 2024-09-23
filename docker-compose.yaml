@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  server :
+    build:
+      args:
+        IMAGE_PHP_VERSION: ${PHP_VERSION:-}
+    environment:
+      DDAP_LOGIN: ${DDAP_LOGIN:-}
+      DDAP_PASSWORD: ${DDAP_PASSWORD:-}
+      DDAP_DEVTOOLS: ${DDAP_DEVTOOLS:-}
+      DDAP_DEVTOOLS_URL: ${DDAP_DEVTOOLS_URL:-}
+      MARIADB_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-}"
+      MARIADB_USER: "${MARIADB_USER}"
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes:
+      - './public:/var/www/html'
+    ports:
+      - "8080:80"
+
+  mariadb:
+    image: mariadb
+    restart: unless-stopped
+    container_name: mariadb
+    hostname: mariadb
+    ports:
+      - '3306:3306'
+    environment:
+      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD:-}"
+      MARIADB_USER: "${MARIADB_USER}"
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes :
+      - './data/mysql:/var/lib/mysql:delegated'

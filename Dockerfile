@@ -2,10 +2,10 @@
 # https://www.itzgeek.com/how-tos/linux/debian/how-to-install-php-7-3-7-2-7-1-on-debian-10-debian-9-debian-8.html
 # https://github.com/dockerwest/php/blob/master/8.0/scripts/install.sh
 
-FROM debian:12-slim
+FROM debian:11-slim
 
 # Default PHP version, and expose env to be used in RUN commands
-ARG IMAGE_PHP_VERSION=8.3
+ARG IMAGE_PHP_VERSION=7.4
 ENV IMAGE_PHP_VERSION=${IMAGE_PHP_VERSION}
 
 # Set default environment variables for Apache
@@ -120,6 +120,31 @@ RUN ln -sf /config/app.conf /etc/apache2/conf-available/zzz-app.conf; \
     ln -sf /config/password.conf /etc/apache2/conf-available/zzz-password.conf; \
     ln -sf /config/vhost.conf /etc/apache2/sites-available/000-default.conf; \
     ln -sf /config/php.ini /etc/php/${IMAGE_PHP_VERSION}/fpm/php.ini
+
+# install PW server
+
+RUN apt update && apt install software-properties-common -y
+RUN apt-add-repository contrib
+RUN apt-add-repository non-free
+
+RUN apt update && apt install python3-pip unrar \
+    mariadb-client php-mysql net-tools nano -y
+RUN pip install gdown
+
+RUN gdown --fuzzy https://drive.google.com/file/d/1vIo5z5c34TpZ20OQEZl0pcDOxmo0N7AW/view
+
+RUN unrar x PW155_Setup_v2.rar
+
+RUN chmod +x extract_PW_tar.sh
+RUN bash ./extract_PW_tar.sh; exit 0
+
+WORKDIR /root/
+
+COPY install.sh /root/
+
+RUN chmod +x install.sh
+RUN bash ./install.sh
+
 
 # Switch to non-root user
 USER www-data
