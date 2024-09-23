@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   server :
+    image: asrulsibaoel/pw_server:latest
     build:
+      context: .
       args:
         IMAGE_PHP_VERSION: ${PHP_VERSION:-}
     environment:
@@ -14,8 +16,12 @@ services:
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     volumes:
       - './public:/var/www/html'
+
+    depends_on:
+      - mariadb
     ports:
-      - "8080:80"
+      - "29000:29000"
+      - "80:80"
 
   mariadb:
     image: mariadb
